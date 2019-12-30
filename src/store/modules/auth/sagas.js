@@ -20,6 +20,7 @@ export function* signIn({ payload }) {
       toast.error('Usuário não é prestador');
       return;
     }
+    api.defaults.headers.Authorization = `Bearer ${token}`;
     yield put(signInSuccess(token, user));
     history.push('/dashboard');
   } catch (error) {
@@ -28,4 +29,34 @@ export function* signIn({ payload }) {
   }
 }
 
-export default all([takeLatest('@auth/SIGN_IN_REQUEST', signIn)]);
+export function* signUp({ payload }) {
+  try {
+    const { name, email, password } = payload;
+    console.tron.log(payload);
+    yield call(api.post, 'user', {
+      name,
+      email,
+      password,
+      provider: true,
+    });
+    toast.success('cadastro realizado com sucesso!');
+    history.push('/');
+  } catch (err) {
+    toast.error('falha no cadastro');
+    yield put(signFailure());
+  }
+}
+export function setToken({ payload }) {
+  if (!payload) return;
+
+  const { token } = payload.auth;
+
+  if (token) {
+    api.defaults.headers.Authorization = `Bearer ${token}`;
+  }
+}
+export default all([
+  takeLatest('persist/REHYDRATE', setToken),
+  takeLatest('@auth/SIGN_IN_REQUEST', signIn),
+  takeLatest('@auth/SIGNUP_REQUEST', signUp),
+]);
