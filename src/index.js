@@ -1,9 +1,15 @@
-import React from 'react';
 import './config/ReactotronConfig';
-import { View } from 'react-native';
+import React from 'react';
+
+import { NavigationContainer } from '@react-navigation/native';
+import Routes from './routes';
 
 // import { Container } from './styles';
 
 export default function App() {
-  return <View />;
+  return (
+    <NavigationContainer>
+      <Routes />
+    </NavigationContainer>
+  );
 }
