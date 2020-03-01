@@ -25,6 +25,15 @@ module.exports = {
         extensions: ['.jsx', '.js'],
       },
     ],
-    'import/prefer-defautl-export': 'off',
+    'import/prefer-default-export': 'off',
+    'react/jsx-props-no-spreading': 'off',
+  },
+  settings: {
+    'import/resolver': {
+      'babel-plugin-root-import': {
+        rootPathPrefix: '~',
+        rootPathSuffix: 'src',
+      },
+    },
   },
 };
