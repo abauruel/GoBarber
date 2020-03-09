@@ -1,7 +1,8 @@
 import React, { useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { Image } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
+import { singUpRequest } from '~/store/modules/auth/action';
 import Background from '~/components/Background';
 import logo from '~/assets/logo.png';
 import {
@@ -12,22 +13,20 @@ import {
   SignLink,
   SignLinkText,
 } from './styles';
-import { signInRequest } from '~/store/modules/auth/action';
 
-export default function SignIn() {
+export default function SignUp() {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
+  const emailRef = useRef();
+  const passwordRef = useRef();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const loading = useSelector(state => state.auth.loading);
 
-  const navigation = useNavigation();
-  const passwordRef = useRef();
-
-  function handleSingUp() {
-    navigation.navigate('SignUp');
-  }
   function handleSubmit() {
-    dispatch(signInRequest(email, password));
+    dispatch(singUpRequest(name, email, password));
   }
   return (
     <Background>
@@ -35,11 +34,22 @@ export default function SignIn() {
         <Image source={logo} />
         <Form>
           <FormInput
+            icon="person-outline"
+            autoCorrect={false}
+            autoCaptalize="none"
+            placeholder="Digite seu nome completo"
+            returnKeyType="next"
+            onSubmitEditing={() => emailRef.current.focus()}
+            value={name}
+            onChangeText={setName}
+          />
+          <FormInput
             icon="mail-outline"
             keyboardType="email-address"
             autoCorrect={false}
             autoCaptalize="none"
             placeholder="Digite seu e-mail"
+            ref={emailRef}
             returnKeyType="next"
             onSubmitEditing={() => passwordRef.current.focus()}
             value={email}
@@ -57,11 +67,11 @@ export default function SignIn() {
             onChangeText={setPassword}
           />
           <SubmitButton loading={loading} onPress={handleSubmit}>
-            Acessar
+            Salvar
           </SubmitButton>
         </Form>
-        <SignLink onPress={handleSingUp}>
-          <SignLinkText>Criar conta gratuita</SignLinkText>
+        <SignLink onPress={() => navigation.navigate('SignIn')}>
+          <SignLinkText>Ja possuo conta</SignLinkText>
         </SignLink>
       </Container>
     </Background>
